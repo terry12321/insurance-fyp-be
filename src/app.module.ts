@@ -4,10 +4,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { Authentication } from './authentication/entities/authentication.entity';
+import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     AuthenticationModule,
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -15,9 +19,10 @@ import { Authentication } from './authentication/entities/authentication.entity'
       username: 'root',
       password: '123qwe!!',
       database: 'Insurance_Fyp',
-      entities: [Authentication],
+      entities: [Authentication, User],
       synchronize: true,
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
