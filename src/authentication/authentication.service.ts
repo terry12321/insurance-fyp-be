@@ -15,17 +15,17 @@ export class AuthenticationService {
     const user = await this.usersService.findOne(username);
     const login = await bcrypt.compare(password, user.password);
     if (user && login) {
-      const { password, ...result } = user;
-      return result;
+      delete user.password;
+      return user;
     }
 
     return null;
   }
 
-  async login(user: User) {
+  login(user: User) {
     const payload = { username: user.username, userId: user.id };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }
