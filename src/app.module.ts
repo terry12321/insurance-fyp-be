@@ -7,6 +7,8 @@ import { Authentication } from './authentication/entities/authentication.entity'
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { MailModule } from './mail/mail.module';
+import { UserFile } from './users/entities/userFile.entity';
 
 @Module({
   imports: [
@@ -19,10 +21,11 @@ import { ConfigModule } from '@nestjs/config';
       username: 'root',
       password: '123qwe!!',
       database: 'Insurance_Fyp',
-      entities: [Authentication, User],
+      entities: [Authentication, User, UserFile],
       synchronize: true,
     }),
     UsersModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

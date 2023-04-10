@@ -1,6 +1,14 @@
-import { Controller, Post, UseGuards, Request, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Res,
+  Body,
+} from '@nestjs/common';
 import { Request as ExpressRequest, Response } from 'express';
 import { AuthenticationService } from './authentication.service';
+import { ForgetPasswordAuthenticationDto } from './dto/forget-password-authentication.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
@@ -35,5 +43,26 @@ export class AuthenticationController {
   async logout(@Res() response: Response) {
     response.clearCookie('session');
     response.status(200).send({});
+  }
+
+  @Post('forget-password')
+  async forgetPassword(@Request() req, @Res() response: Response) {
+    const { email } = req.body;
+    const result = await this.authService.forgetPassword(email);
+    if (!result) {
+      response.status(400).send({ msg: 'User not registered' });
+    } else {
+      response.status(200).send(result);
+    }
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Request() req, @Res() response: Response) {
+    try {
+      const result = await this.authService.resetPassword(req.body);
+      response.status(200).send(result);
+    } catch (error) {
+      response.status(400).send(error);
+    }
   }
 }
