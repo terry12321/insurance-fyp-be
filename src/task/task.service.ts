@@ -2,9 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { NoteDto } from './dto/note.dto';
 import { TaskDto } from './dto/task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
 import { Note } from './entities/note.entity';
 import { Task } from './entities/task.entity';
 
@@ -25,7 +23,6 @@ export class TaskService {
         const body: TaskDto = { ...task, notes: [] };
         const notes = await this.noteRepo.find({
           where: { cardId: task.cardId },
-          select: ['content', 'date'],
         });
         body.notes = notes;
         return body;
@@ -34,15 +31,13 @@ export class TaskService {
     return await Promise.all(promiseTask);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
-  }
-
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  async remove(id: number) {
+    await this.taskRepo
+      .createQueryBuilder()
+      .delete()
+      .from('note')
+      .where('id = :id', { id: id })
+      .execute();
+    return 'Successfully deleted note';
   }
 }
