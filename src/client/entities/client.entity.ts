@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Client {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column('varchar', { length: 256 })
+  @Column('varchar', { length: 256, nullable: true })
   profileImage: string;
   @Column('varchar', { length: 256 })
   name: string;

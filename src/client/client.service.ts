@@ -18,23 +18,26 @@ export class ClientService {
     return 'Client successfully added';
   }
 
-  findAll() {
-    return `This action returns all client`;
+  async findAll() {
+    return await this.clientRepo.find();
+    // return `This action returns all client`;
   }
 
   async getAllOccupation() {
     return await this.occupationRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: number) {
+    return await this.clientRepo.findOneBy({ id: id });
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    return await this.clientRepo.update(id, updateClientDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: number) {
+    return await this.clientRepo.delete({ id }).then((value) => {
+      return value;
+    });
   }
 }

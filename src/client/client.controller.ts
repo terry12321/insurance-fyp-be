@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -25,8 +26,12 @@ export class ClientController {
   }
 
   @Get()
-  findAll() {
-    return this.clientService.findAll();
+  async findAll() {
+    try {
+      return await this.clientService.findAll();
+    } catch (error) {
+      return error;
+    }
   }
 
   @Get('/get-all-occupation')
@@ -36,16 +41,31 @@ export class ClientController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientService.findOne(+id);
+    try {
+      return this.clientService.findOne(+id);
+    } catch (error) {
+      return error;
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
-    return this.clientService.update(+id, updateClientDto);
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateClientDto: UpdateClientDto,
+  ) {
+    try {
+      return await this.clientService.update(+id, updateClientDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.clientService.remove(+id);
+    try {
+      return this.clientService.remove(+id);
+    } catch (error) {
+      return error;
+    }
   }
 }
