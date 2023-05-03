@@ -15,6 +15,7 @@ import { Task } from './task/entities/task.entity';
 import { ClientModule } from './client/client.module';
 import { Client } from './client/entities/client.entity';
 import { Occupation } from './client/entities/occupation.entity';
+import { ClientPolicy } from './client/entities/clientPolicy.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { Occupation } from './client/entities/occupation.entity';
         Task,
         Client,
         Occupation,
+        ClientPolicy,
       ],
       synchronize: true,
     }),

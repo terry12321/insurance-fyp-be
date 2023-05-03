@@ -11,6 +11,8 @@ import {
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { CreateClientPolicyDto } from './dto/create-client-policy.dto';
+import { UpdateClientPolicyDto } from './dto/update-client-policy.dto';
 
 @Controller('client')
 export class ClientController {
@@ -25,10 +27,30 @@ export class ClientController {
     }
   }
 
+  @Post('policy')
+  async createClientPolicy(
+    @Body() createClientPolicyDto: CreateClientPolicyDto,
+  ) {
+    try {
+      return await this.clientService.createClientPolicy(createClientPolicyDto);
+    } catch (error) {
+      return error;
+    }
+  }
+
   @Get()
   async findAll() {
     try {
       return await this.clientService.findAll();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Get('policy/:id')
+  async findAllPolicy(@Param('id') id: string) {
+    try {
+      return await this.clientService.findAllPolicy(+id);
     } catch (error) {
       return error;
     }
@@ -55,6 +77,18 @@ export class ClientController {
   ) {
     try {
       return await this.clientService.update(+id, updateClientDto);
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Put('policy/:id')
+  async updatePolicy(
+    @Param('id') id: string,
+    @Body() updateClientPolicyDto: UpdateClientPolicyDto,
+  ) {
+    try {
+      return await this.clientService.updatePolicy(+id, updateClientPolicyDto);
     } catch (error) {
       return error;
     }

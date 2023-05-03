@@ -5,11 +5,15 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
 import { Occupation } from './entities/occupation.entity';
+import { CreateClientPolicyDto } from './dto/create-client-policy.dto';
+import { ClientPolicy } from './entities/clientPolicy.entity';
 
 @Injectable()
 export class ClientService {
   constructor(
     @InjectRepository(Client) private clientRepo: Repository<Client>,
+    @InjectRepository(ClientPolicy)
+    private clientPolicyRepo: Repository<ClientPolicy>,
     @InjectRepository(Occupation)
     private occupationRepo: Repository<Occupation>,
   ) {}
@@ -18,8 +22,18 @@ export class ClientService {
     return 'Client successfully added';
   }
 
+  async createClientPolicy(createClientPolicyDto: CreateClientPolicyDto) {
+    await this.clientPolicyRepo.save(createClientPolicyDto);
+    return 'Client Policy successfully added';
+  }
+
   async findAll() {
     return await this.clientRepo.find();
+    // return `This action returns all client`;
+  }
+
+  async findAllPolicy(id: number) {
+    return await this.clientPolicyRepo.findBy({ clientId: id });
     // return `This action returns all client`;
   }
 
@@ -33,6 +47,10 @@ export class ClientService {
 
   async update(id: number, updateClientDto: UpdateClientDto) {
     return await this.clientRepo.update(id, updateClientDto);
+  }
+
+  async updatePolicy(id: number, updateClientDto: UpdateClientDto) {
+    return await this.clientPolicyRepo.update(id, updateClientDto);
   }
 
   async remove(id: number) {
