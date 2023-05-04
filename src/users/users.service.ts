@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDto } from './dto/user.dto';
@@ -23,6 +23,16 @@ export class UsersService {
   }
 
   async register(body: UserDto) {
+    const userExist = await this.findOne(body.email);
+
+    // check if user is already registered
+    if (userExist) {
+      throw new HttpException(
+        'User with this email already exists. Please try another email.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     return await bcrypt
       .hash(body.password, 10)
       .then(async (hash) => {
@@ -30,6 +40,8 @@ export class UsersService {
           const user = new User();
           user.email = body.email;
           user.password = hash;
+          user.firstName = body.firstName;
+          user.lastName = body.lastName;
           await this.userRepo.save(user);
           return 'successfully created';
         }

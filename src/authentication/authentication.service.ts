@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -17,13 +21,16 @@ export class AuthenticationService {
 
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findOne(email);
+    if (!user) {
+      throw new BadRequestException('No such user exists.');
+    }
     const login = await bcrypt.compare(password, user.password);
     if (user && login) {
       delete user.password;
       return user;
+    } else {
+      throw new UnauthorizedException('Incorrect email or password.');
     }
-
-    return null;
   }
 
   login(user: User) {

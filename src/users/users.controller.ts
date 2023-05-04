@@ -6,6 +6,7 @@ import {
   Post,
   Body,
   Param,
+  HttpException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { UserDto } from './dto/user.dto';
@@ -23,7 +24,11 @@ export class UsersController {
 
   @Post('register')
   async register(@Body() body: UserDto) {
-    return await this.usersService.register(body);
+    try {
+      return await this.usersService.register(body);
+    } catch (error) {
+      throw new HttpException(error.response, error.status);
+    }
   }
 
   @UseGuards(JwtAuthGuard)
