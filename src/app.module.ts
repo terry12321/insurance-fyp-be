@@ -22,9 +22,9 @@ import { ClientPolicy } from './client/entities/clientPolicy.entity';
     AuthenticationModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
+      type: 'postgres',
+      host: 'db.ivxonmjfqaxpzevtrzjm.supabase.co',
+      port: 5432,
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: process.env.DB,

@@ -23,14 +23,14 @@ export class UsersService {
   }
 
   async register(body: UserDto) {
-    return bcrypt
+    return await bcrypt
       .hash(body.password, 10)
       .then(async (hash) => {
         if (hash) {
           const user = new User();
           user.email = body.email;
           user.password = hash;
-          this.userRepo.save(user);
+          await this.userRepo.save(user);
           return 'successfully created';
         }
       })
