@@ -7,21 +7,25 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { CreateClientPolicyDto } from './dto/create-client-policy.dto';
 import { UpdateClientPolicyDto } from './dto/update-client-policy.dto';
+import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 
 @Controller('client')
+@UseGuards(JwtAuthGuard)
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Post()
-  async create(@Body() createClientDto: CreateClientDto) {
+  async create(@Body() createClientDto: CreateClientDto, @Request() req) {
     try {
-      return await this.clientService.create(createClientDto);
+      return await this.clientService.create(createClientDto, req.user);
     } catch (error) {
       return error;
     }
@@ -39,9 +43,9 @@ export class ClientController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Request() req) {
     try {
-      return await this.clientService.findAll();
+      return await this.clientService.findAll(req.user);
     } catch (error) {
       return error;
     }
@@ -94,6 +98,14 @@ export class ClientController {
     }
   }
 
+  @Delete(':id')
+  remove(@Param('id') id: string, @Request() req) {
+    try {
+      return this.clientService.remove(+id, req.user);
+    } catch (error) {
+      return error;
+    }
+  }
   @Delete('policy/:id')
   removePolicy(@Param('id') id: string) {
     try {

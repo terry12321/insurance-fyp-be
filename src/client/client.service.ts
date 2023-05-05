@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
 import { Occupation } from './entities/occupation.entity';
 import { CreateClientPolicyDto } from './dto/create-client-policy.dto';
 import { ClientPolicy } from './entities/clientPolicy.entity';
+import { ClientUser } from './entities/clientUser.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ClientService {
@@ -16,9 +18,15 @@ export class ClientService {
     private clientPolicyRepo: Repository<ClientPolicy>,
     @InjectRepository(Occupation)
     private occupationRepo: Repository<Occupation>,
+    @InjectRepository(ClientUser)
+    private clientUserRepo: Repository<ClientUser>,
   ) {}
-  async create(createClientDto: CreateClientDto) {
-    await this.clientRepo.save(createClientDto);
+  async create(createClientDto: CreateClientDto, user: User) {
+    const result = await this.clientRepo.save(createClientDto);
+    // After saving to client database
+    // Update client user table to link client to user
+
+    await this.clientUserRepo.save({ userId: user.id, clientId: result.id });
     return 'Client successfully added';
   }
 
@@ -27,8 +35,16 @@ export class ClientService {
     return 'Client Policy successfully added';
   }
 
-  async findAll() {
-    return await this.clientRepo.find();
+  async findAll(user: User) {
+    const result = await this.clientUserRepo.find({
+      where: { userId: user.id },
+    });
+    const clientIds = result.map((value) => {
+      return value.clientId;
+    });
+
+    return await this.clientRepo.find({ where: { id: In(clientIds) } });
+
     // return `This action returns all client`;
   }
 
@@ -51,6 +67,13 @@ export class ClientService {
 
   async updatePolicy(id: number, updateClientDto: UpdateClientDto) {
     return await this.clientPolicyRepo.update(id, updateClientDto);
+  }
+
+  async remove(id: number, user: User) {
+    return await this.clientRepo.delete({ id }).then(async (value) => {
+      await this.clientUserRepo.delete({ userId: user.id, clientId: id });
+      return value;
+    });
   }
 
   async removePolicy(id: number) {
