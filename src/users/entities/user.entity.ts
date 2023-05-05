@@ -12,4 +12,6 @@ export class User {
   email: string;
   @Column('varchar', { length: 256 })
   password: string;
+  @Column('text', { nullable: true })
+  imageUrl: string;
 }

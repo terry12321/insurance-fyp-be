@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import { UserFileDto } from './dto/userFile.dto';
 import { UserFile } from './entities/userFile.entity';
 import { DeleteFileDto } from './dto/deleteFile.dto';
+import { UserProfileDto } from './dto/userProfile.dto';
 
 @Injectable()
 export class UsersService {
@@ -98,5 +99,9 @@ export class UsersService {
     return await this.userFileRepo.delete(body).then((value) => {
       return value;
     });
+  }
+
+  async updateFile(user: User, body: UserProfileDto) {
+    await this.userRepo.update({ id: user.id }, body);
   }
 }

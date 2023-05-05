@@ -26,7 +26,7 @@ export class AuthenticationController {
       path: '/',
       sameSite: 'lax',
     });
-    response.json({ accessToken: result.accessToken });
+    response.json({ accessToken: result.accessToken, user: req.user });
   }
 
   @UseGuards(JwtAuthGuard)

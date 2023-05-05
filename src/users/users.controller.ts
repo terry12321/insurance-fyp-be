@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   HttpException,
+  Put,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/authentication/jwt-auth.guard';
 import { UserDto } from './dto/user.dto';
@@ -18,8 +19,11 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async getProfile(@Request() req) {
+    const { password, ...result } = await this.usersService.findOne(
+      req.user.email,
+    );
+    return result;
   }
 
   @Post('register')
@@ -56,6 +60,17 @@ export class UsersController {
     try {
       await this.usersService.deleteFile(req.user, +params.id);
       return 'successfully deleted user file';
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update-profile')
+  async updateFile(@Request() req, @Body() body) {
+    try {
+      await this.usersService.updateFile(req.user, body);
+      return 'successfully updated user profile';
     } catch (error) {
       return error;
     }
