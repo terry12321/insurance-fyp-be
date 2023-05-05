@@ -17,6 +17,7 @@ import { Client } from './client/entities/client.entity';
 import { Occupation } from './client/entities/occupation.entity';
 import { ClientPolicy } from './client/entities/clientPolicy.entity';
 import { ClientUser } from './client/entities/clientUser.entity';
+import { TaskNote } from './task/entities/taskNote.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ClientUser } from './client/entities/clientUser.entity';
         UserFile,
         Note,
         Task,
+        TaskNote,
         Client,
         Occupation,
         ClientPolicy,
