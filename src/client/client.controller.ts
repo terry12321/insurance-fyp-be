@@ -94,10 +94,10 @@ export class ClientController {
     }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('policy/:id')
+  removePolicy(@Param('id') id: string) {
     try {
-      return this.clientService.remove(+id);
+      return this.clientService.removePolicy(+id);
     } catch (error) {
       return error;
     }

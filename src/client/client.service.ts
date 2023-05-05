@@ -53,8 +53,8 @@ export class ClientService {
     return await this.clientPolicyRepo.update(id, updateClientDto);
   }
 
-  async remove(id: number) {
-    return await this.clientRepo.delete({ id }).then((value) => {
+  async removePolicy(id: number) {
+    return await this.clientPolicyRepo.delete({ id }).then((value) => {
       return value;
     });
   }
