@@ -7,6 +7,7 @@ import { Note } from './entities/note.entity';
 import { Task } from './entities/task.entity';
 import { User } from 'src/users/entities/user.entity';
 import { TaskNote } from './entities/taskNote.entity';
+import { UpdateNoteDto } from './dto/update-note-dto';
 
 @Injectable()
 export class TaskService {
@@ -52,5 +53,8 @@ export class TaskService {
       .execute();
     await this.taskNoteRepo.delete({ noteId: id });
     return 'Successfully deleted note';
+  }
+  async update(id: number, body: UpdateNoteDto) {
+    return await this.noteRepo.update(id, body);
   }
 }
